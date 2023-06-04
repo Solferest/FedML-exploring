@@ -27,7 +27,7 @@ def load_data_global(data_dir, batch_size):
     train_dir = data_dir + '/train'
     test_dir = data_dir + '/test'
 
-    # Define transforms for image preprocessing
+    # трансформация для изображений
     transform_train = transforms.Compose([
         transforms.RandomResizedCrop(224),
         transforms.RandomHorizontalFlip(),
@@ -144,7 +144,7 @@ def load_partition_fed_experiment(args):
     nc = args.output_dim
     #nc=8
     #batch_size=32
-    train_data_global, test_data_global = load_data_global(args.data_cache_dir, args.batch_size)
+    train_data_global, test_data_global = load_data_global(args.data_cache_dir+"/Dataset/Dataset 1", args.batch_size)
     train_data_num = len(train_data_global.dataset)
     test_data_num = len(test_data_global.datset)
     if args.worker_num == 2:
@@ -172,4 +172,3 @@ def load_partition_fed_experiment(args):
         test_data_local_dict,
         nc,
     )
-
