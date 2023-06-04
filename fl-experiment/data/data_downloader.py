@@ -7,6 +7,7 @@ import logging
 import random
 import shutil
 import requests
+import re
 
 cwd = os.getcwd()
 #DATASET_URL='https://drive.google.com/uc?export=download&confirm=1qeQbob94err5Zd7DLoq3Q2RsAUbRH0cb'
@@ -20,9 +21,7 @@ def main(data_cache_dir):
     #скачивание и распаковывание датасета
     file_id = "1qeQbob94err5Zd7DLoq3Q2RsAUbRH0cb"
     url = f"https://docs.google.com/uc?export=download&id={file_id}"
-
     session = requests.Session()
-
     response = session.get(url)
     confirm_token = None
 
@@ -45,22 +44,24 @@ def main(data_cache_dir):
             zip_ref.extractall(data_cache_dir)
 
 
-    #Set up directories
-    base_dir = data_cache_dir+"/Dataset/Dataset 1" #path/to/base/directory
+    # Set up directories
+    base_dir = data_cache_dir+"/Dataset/Dataset 1" # путь до корневой директории
     #base_dir = data_cache_dir + "/dataset"
     train_dir = os.path.join(base_dir, "train")
     test_dir = os.path.join(base_dir, "test")
-    classes = ["class1", "class2"]  # replace with your actual class names
-
+    #classes = ["class1", "class2"]
+    classes = ["Bruce Force FTP-Patator", "Bruce Force SSH-Patator",
+               "Dos GoldenEye", "Dos Hulk",
+               "Dos Slowhttptest", "Dos Slowloris",
+               "Heartbleed Port 444", "Normal"] #названия классов
     for d in [train_dir, test_dir]:
         if not os.path.exists(d):
             os.makedirs(d)
-
     # Move files to train/test directories by class
     for c in classes:
         class_dir = os.path.join(base_dir, c)
         files = os.listdir(class_dir)
-        n_train = int(len(files) * 0.8)  # adjust split ratio here
+        n_train = int(len(files) * 0.8)  #здесь можно настроить соотношение
 
         for f in files[:n_train]:
             src = os.path.join(class_dir, f)
@@ -75,7 +76,7 @@ def main(data_cache_dir):
             if not os.path.exists(os.path.join(test_dir, c)):
                 os.makedirs(os.path.join(test_dir, c))
             shutil.move(src, dst)
-            # Delete original directory
+
         shutil.rmtree(class_dir)
 
 
